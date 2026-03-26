@@ -15,17 +15,12 @@ load_dotenv()
 BASE_URL = os.getenv("PERSONIO_BASE_URL", "https://api.personio.de/v1")
 CLIENT_ID = os.getenv("PERSONIO_CLIENT_ID")
 CLIENT_SECRET = os.getenv("PERSONIO_CLIENT_SECRET")
-MOCK_MODE = True  # Auf False setzen wenn echte API Credentials vorhanden
+MOCK_MODE = True
 
 
 # --- Funktionen ---
 
 def authenticate():
-    """
-    Authentifizierung gegen Personio API.
-    POST /v1/auth mit client_id und client_secret.
-    Gibt den Bearer Token zurück.
-    """
     if MOCK_MODE:
         print("Auth: Mock-Modus aktiv")
         return "mock-token-12345"
@@ -39,38 +34,50 @@ def authenticate():
 
 
 def fetch_all_employees(token):
-    """
-    Alle Mitarbeiter abrufen mit Pagination.
-    GET /v1/company/employees mit limit=200 und offset.
-    """
-    # TODO: Implementiere den paginierten Abruf
-    pass
+    if MOCK_MODE:
+        print(f"Mock: {len(MOCK_EMPLOYEES)} Mitarbeiter geladen")
+        return MOCK_EMPLOYEES
+
+    all_employees = []
+    offset = 0
+    limit = 200
+
+    while True:
+        response = requests.get(
+            f"{BASE_URL}/company/employees",
+            headers={"Authorization": f"Bearer {token}"},
+            params={"limit": limit, "offset": offset}
+        )
+        response.raise_for_status()
+        data = response.json()["data"]
+
+        if not data:
+            break
+
+        all_employees.extend(data)
+        offset += limit
+
+    print(f"Live: {len(all_employees)} Mitarbeiter geladen")
+    return all_employees
 
 
 def parse_employee(raw_employee):
-    """
-    Verschachteltes Personio-JSON in flaches Dict umwandeln.
-    """
     # TODO: Implementiere das Parsing
     pass
 
 
 def generate_sync_report(employees):
-    """
-    Sync-Report generieren.
-    """
     # TODO: Implementiere den Report
     pass
 
 
 def main():
-    """Orchestriert den kompletten Sync-Prozess."""
     print("=== PERSONIO EMPLOYEE SYNC ===")
     print(f"Datum: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Modus: {'MOCK' if MOCK_MODE else 'LIVE'}\n")
 
     # TODO:
-    # 1. Authentifizieren (oder Mock-Modus nutzen)
+    # 1. Authentifizieren
     # 2. Mitarbeiter abrufen
     # 3. Jeden Mitarbeiter parsen
     # 4. Report generieren
