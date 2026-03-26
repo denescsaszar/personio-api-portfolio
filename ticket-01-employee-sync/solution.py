@@ -61,9 +61,19 @@ def fetch_all_employees(token):
     return all_employees
 
 
+
 def parse_employee(raw_employee):
-    # TODO: Implementiere das Parsing
-    pass
+    attrs = raw_employee["attributes"]
+    return {
+        "id": attrs["id"]["value"],
+        "first_name": attrs["first_name"]["value"],
+        "last_name": attrs["last_name"]["value"],
+        "email": attrs["email"]["value"],
+        "department": attrs["department"]["value"]["attributes"]["name"],
+        "position": attrs["position"]["value"],
+        "hire_date": attrs["hire_date"]["value"],
+        "status": attrs["status"]["value"],
+    }
 
 
 def generate_sync_report(employees):
