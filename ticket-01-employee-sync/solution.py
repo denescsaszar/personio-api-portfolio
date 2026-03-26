@@ -1,8 +1,5 @@
 # Ticket 01 — Employee Data Sync
 # Personio API Portfolio
-#
-# Aufgabe: Implementiere die Funktionen unten.
-# Nutze die Mock-Daten zum Testen (kein echtes Personio-Konto nötig).
 
 import os
 import requests
@@ -20,11 +17,6 @@ CLIENT_ID = os.getenv("PERSONIO_CLIENT_ID")
 CLIENT_SECRET = os.getenv("PERSONIO_CLIENT_SECRET")
 MOCK_MODE = True  # Auf False setzen wenn echte API Credentials vorhanden
 
-# --- Mock-Daten (echtes Personio JSON-Format) ---
-
-MOCK_EMPLOYEES = []
-
-
 
 # --- Funktionen ---
 
@@ -34,15 +26,22 @@ def authenticate():
     POST /v1/auth mit client_id und client_secret.
     Gibt den Bearer Token zurück.
     """
-    # TODO: Implementiere die Authentifizierung
-    pass
+    if MOCK_MODE:
+        print("Auth: Mock-Modus aktiv")
+        return "mock-token-12345"
+
+    response = requests.post(
+        f"{BASE_URL}/auth",
+        json={"client_id": CLIENT_ID, "client_secret": CLIENT_SECRET}
+    )
+    response.raise_for_status()
+    return response.json()["data"]["token"]
 
 
 def fetch_all_employees(token):
     """
     Alle Mitarbeiter abrufen mit Pagination.
     GET /v1/company/employees mit limit=200 und offset.
-    Solange Ergebnisse kommen → nächste Seite.
     """
     # TODO: Implementiere den paginierten Abruf
     pass
@@ -51,12 +50,6 @@ def fetch_all_employees(token):
 def parse_employee(raw_employee):
     """
     Verschachteltes Personio-JSON in flaches Dict umwandeln.
-
-    Input:  raw_employee["attributes"]["first_name"]["value"]
-    Output: {"first_name": "Max", "last_name": "Mustermann", ...}
-
-    Achtung: department ist verschachtelt!
-    raw["attributes"]["department"]["value"]["attributes"]["name"]
     """
     # TODO: Implementiere das Parsing
     pass
@@ -64,10 +57,7 @@ def parse_employee(raw_employee):
 
 def generate_sync_report(employees):
     """
-    Sync-Report generieren:
-    - Gesamtzahl, aktive/inaktive MA
-    - Aufschlüsselung nach Abteilung
-    - Mitarbeiterliste mit Details
+    Sync-Report generieren.
     """
     # TODO: Implementiere den Report
     pass
