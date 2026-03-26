@@ -77,8 +77,28 @@ def parse_employee(raw_employee):
 
 
 def generate_sync_report(employees):
-    # TODO: Implementiere den Report
-    pass
+    print("=== PERSONIO EMPLOYEE SYNC REPORT ===")
+    print(f"Quelle: Personio API (TechStart GmbH)\n")
+
+    # 1. Zähle total, aktive, inaktive
+    total = len(employees)
+    active = len([e for e in employees if e["status"] == "active"])
+    inactive = total - active
+
+    print(f"Gesamtzahl Mitarbeiter: {total}")
+    print(f"Aktive Mitarbeiter: {active}")
+    print(f"Inaktive Mitarbeiter: {inactive}\n")
+
+    # 2. Counter nach Abteilung
+    dept_counts = Counter(e["department"] for e in employees)
+    print("--- Mitarbeiter nach Abteilung ---")
+    for dept, count in dept_counts.most_common():
+        print(f"{dept}: {count}")
+
+    # 3. Mitarbeiterliste
+    print("\n--- Mitarbeiterliste ---")
+    for e in employees:
+        print(f"[{e['id']:03d}] {e['first_name']} {e['last_name']} | {e['department']} | {e['position']} | {e['email']}")
 
 
 def main():
@@ -86,11 +106,10 @@ def main():
     print(f"Datum: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Modus: {'MOCK' if MOCK_MODE else 'LIVE'}\n")
 
-    # TODO:
-    # 1. Authentifizieren
-    # 2. Mitarbeiter abrufen
-    # 3. Jeden Mitarbeiter parsen
-    # 4. Report generieren
+    token = authenticate()
+    raw_employees = fetch_all_employees(token)
+    employees = [parse_employee(e) for e in raw_employees]
+    generate_sync_report(employees)
 
 
 if __name__ == "__main__":
