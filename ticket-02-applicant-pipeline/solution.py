@@ -24,14 +24,16 @@ MOCK_MODE = True  # Auf False setzen wenn echte API Credentials vorhanden
 # --- Funktionen ---
 
 def authenticate():
-    """
-    Authentifizierung gegen Personio API.
-    POST /v1/auth mit client_id und client_secret.
-    Gibt den Bearer Token zurück.
-    """
-    # TODO: Implementiere die Authentifizierung
-    pass
+    if MOCK_MODE:
+        print("Auth: Mock-Modus aktiv")
+        return "mock-token-12345"
 
+    response = requests.post(
+        f"{BASE_URL}/auth",
+        json={"client_id": CLIENT_ID, "client_secret": CLIENT_SECRET}
+    )
+    response.raise_for_status()
+    return response.json()["data"]["token"]
 
 def fetch_all_applicants(token):
     """
