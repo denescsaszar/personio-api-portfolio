@@ -36,13 +36,31 @@ def authenticate():
     return response.json()["data"]["token"]
 
 def fetch_all_applicants(token):
-    """
-    Alle Bewerber abrufen mit Pagination.
-    GET /v1/company/applicants mit limit=200 und offset.
-    Solange Ergebnisse kommen → nächste Seite.
-    """
-    # TODO: Implementiere den paginierten Abruf
-    pass
+    if MOCK_MODE:
+        print(f"Mock: {len(MOCK_APPLICANTS)} Bewerber geladen")
+        return MOCK_APPLICANTS
+
+    all_applicants = []
+    offset = 0
+    limit = 200
+
+    while True:
+        response = requests.get(
+            f"{BASE_URL}/company/applicants",
+            headers={"Authorization": f"Bearer {token}"},
+            params={"limit": limit, "offset": offset}
+        )
+        response.raise_for_status()
+        data = response.json()["data"]
+
+        if not data:
+            break
+
+        all_applicants.extend(data)
+        offset += limit
+
+    print(f"Live: {len(all_applicants)} Bewerber geladen")
+    return all_applicants
 
 
 def parse_applicant(raw_applicant):
