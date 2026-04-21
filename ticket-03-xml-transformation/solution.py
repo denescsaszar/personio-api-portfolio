@@ -27,16 +27,10 @@ REQUIRED_FIELDS = ["first_name", "last_name", "email", "position"]
 # --- Funktionen ---
 
 def parse_xml(xml_string):
-    """
-    SAP XML String parsen mit xml.etree.ElementTree.
-
-    Input:  XML String (MOCK_SAP_XML)
-    Output: ElementTree Root Element
-
-    Tipp: ET.fromstring(xml_string)
-    """
-    # TODO: Implementiere das XML Parsing
-    pass
+    root = ET.fromstring(xml_string)
+    applicants = root.findall("Applicant")
+    print(f"XML geparst: {len(applicants)} Datensätze gefunden")
+    return applicants
 
 
 def map_fields(sap_applicant):
