@@ -41,18 +41,13 @@ def map_fields(sap_applicant):
         result[personio_field] = value if value else None
     return result
 
-
 def validate_applicant(applicant):
-    """
-    Prüft ob alle Pflichtfelder vorhanden und nicht leer sind.
-
-    Input:  Dict mit gemappten Personio Feldern
-    Output: (is_valid: bool, missing_fields: list)
-
-    Tipp: Prüfe jeden Eintrag in REQUIRED_FIELDS
-    """
-    # TODO: Implementiere die Validierung
-    pass
+    missing = [
+        field for field in REQUIRED_FIELDS
+        if not applicant.get(field)
+    ]
+    is_valid = len(missing) == 0
+    return is_valid, missing
 
 
 def transform_all(xml_string):
