@@ -71,26 +71,33 @@ def transform_all(xml_string):
 
 
 def generate_transformation_report(successful, errors):
-    """
-    Transformations-Report ausgeben:
-    - Gesamtzahl, Erfolge, Fehler
-    - Feldmapping Übersicht
-    - Transformierte Datensätze
-    - Fehler mit Details
-    """
-    # TODO: Implementiere den Report
-    pass
+    total = len(successful) + len(errors)
+    print(f"Gesamt verarbeitet: {total}")
+    print(f"✓ Erfolgreich transformiert: {len(successful)}")
+    print(f"✗ Fehler (fehlende Pflichtfelder): {len(errors)}\n")
+
+    print("--- Feldmapping ---")
+    for sap_field, personio_field in FIELD_MAPPING.items():
+        print(f"SAP {sap_field:<20} → Personio {personio_field:<20} ✓")
+
+    print("\n--- Transformierte Datensätze ---")
+    for i, a in enumerate(successful, 1):
+        print(f"[{i:03d}] {a['first_name']} {a['last_name']:<15} | {a['email']:<30} | {a['position']:<20} | {a['status']}")
+
+    if errors:
+        print("\n--- Fehler ---")
+        for e in errors:
+            name = f"{e['data'].get('first_name', '?')} {e['data'].get('last_name', '?')}"
+            print(f"✗ {name:<20} | Fehlende Pflichtfelder: {', '.join(e['missing_fields'])}")
 
 
 def main():
-    """Orchestriert den kompletten Transformations-Prozess."""
     print("=== SAP → PERSONIO XML TRANSFORMATION ===")
     print(f"Datum: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Quelle: SAP SuccessFactors (Siemens AG)\n")
 
-    # TODO:
-    # 1. XML transformieren (transform_all)
-    # 2. Report generieren
+    successful, errors = transform_all(MOCK_SAP_XML)
+    generate_transformation_report(successful, errors)
 
 
 if __name__ == "__main__":
