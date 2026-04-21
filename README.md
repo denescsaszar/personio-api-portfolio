@@ -14,8 +14,8 @@ Jedes Ticket simuliert ein echtes Kundenproblem, das als Technical Implementatio
 
 | #   | Szenario                             | Personio API Bereich        | Status      |
 | --- | ------------------------------------ | --------------------------- | ----------- |
-| 01  | Employee Data Sync                   | Auth, Employees, Pagination | In Progress |
-| 02  | Attendance-Integration               | Attendance Periods          | Planned     |
+| 01  | Employee Data Sync                   | Auth, Employees, Pagination | ✅ Done     |
+| 02  | Applicant Pipeline Sync              | Recruiting API, POST        | ✅ Done     |
 | 03  | Absence-Management                   | Absence Periods, Types      | Planned     |
 | 04  | Webhook-Setup & Event-Processing     | Webhooks                    | Planned     |
 | 05  | Recruiting-Pipeline & ATS-Anbindung  | Recruiting API              | Planned     |
@@ -36,9 +36,11 @@ Jedes Ticket simuliert ein echtes Kundenproblem, das als Technical Implementatio
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-
 ```
 
+## Ticket 01 — Output
+
+```
 === PERSONIO EMPLOYEE SYNC ===
 Datum: 2026-03-26 22:18
 Modus: MOCK
@@ -72,3 +74,38 @@ Sales: 1
 [010] Michael Wagner | Finance | Finance Manager | michael@techstart.de
 [011] Julia Becker | Finance | Accountant | julia@techstart.de
 [012] Patrick Müller | Sales | Account Executive | patrick@techstart.de
+```
+
+## Ticket 02 — Output
+
+```
+=== PERSONIO APPLICANT PIPELINE ===
+Datum: 2026-04-21 12:42
+Modus: MOCK
+
+Auth: Mock-Modus aktiv
+Mock: 15 Bewerber geladen
+=== PERSONIO APPLICANT PIPELINE REPORT ===
+Quelle: Personio API (TechStart GmbH)
+
+Gesamtzahl Bewerber: 15
+Offen:       8  (53%)
+Eingestellt: 4  (27%)
+Abgelehnt:   3  (20%)
+
+--- Pipeline nach Position ---
+Software Engineer: 5
+Product Manager: 4
+Marketing Manager: 3
+DevOps Engineer: 3
+
+--- Pipeline nach Quelle ---
+Karriereseite: 6
+LinkedIn: 5
+Empfehlung: 4
+
+Conversion Rate (hired/total): 26.7%
+
+--- Bewerber anlegen (Test) ---
+✓ Neuer Bewerber angelegt: Maria Testova | maria@test.de | Software Engineer
+```
