@@ -8,7 +8,7 @@ Jedes Ticket simuliert ein echtes Kundenproblem, das als Technical Implementatio
 - **Sprache:** Python 3.11
 - **HTTP Client:** requests (keine SDK — direkter REST API Zugriff)
 - **API:** Personio REST API v1/v2
-- **Datenformate:** JSON
+- **Datenformate:** JSON, XML
 
 ## Ticket-Übersicht
 
@@ -16,7 +16,7 @@ Jedes Ticket simuliert ein echtes Kundenproblem, das als Technical Implementatio
 | --- | ------------------------------------ | --------------------------- | ----------- |
 | 01  | Employee Data Sync                   | Auth, Employees, Pagination | ✅ Done     |
 | 02  | Applicant Pipeline Sync              | Recruiting API, POST        | ✅ Done     |
-| 03  | Absence-Management                   | Absence Periods, Types      | Planned     |
+| 03  | XML Transformation (SAP → Personio)  | XML Parsing, Field Mapping  | ✅ Done     |
 | 04  | Webhook-Setup & Event-Processing     | Webhooks                    | Planned     |
 | 05  | Recruiting-Pipeline & ATS-Anbindung  | Recruiting API              | Planned     |
 | 06  | Payroll-Datenexport & Transformation | Compensations               | Planned     |
@@ -108,4 +108,40 @@ Conversion Rate (hired/total): 26.7%
 
 --- Bewerber anlegen (Test) ---
 ✓ Neuer Bewerber angelegt: Maria Testova | maria@test.de | Software Engineer
+```
+
+## Ticket 03 — Output
+
+```
+=== SAP → PERSONIO XML TRANSFORMATION ===
+Datum: 2026-04-21 15:43
+Quelle: SAP SuccessFactors (Siemens AG)
+
+XML geparst: 10 Datensätze gefunden
+Gesamt verarbeitet: 10
+✓ Erfolgreich transformiert: 8
+✗ Fehler (fehlende Pflichtfelder): 2
+
+--- Feldmapping ---
+SAP FirstName            → Personio first_name           ✓
+SAP LastName             → Personio last_name            ✓
+SAP EmailAddress         → Personio email                ✓
+SAP JobTitle             → Personio position             ✓
+SAP ApplicationDate      → Personio application_date     ✓
+SAP RecruitingStatus     → Personio status               ✓
+SAP SourceType           → Personio source               ✓
+
+--- Transformierte Datensätze ---
+[001] Maria Schmidt    | maria.schmidt@siemens.de  | Software Engineer | open
+[002] Klaus Müller     | klaus.mueller@siemens.de  | Software Engineer | hired
+[003] Sarah Weber      | sarah.weber@siemens.de    | Software Engineer | rejected
+[004] Thomas Bauer     | thomas.bauer@siemens.de   | DevOps Engineer   | hired
+[005] Anna Hoffmann    | anna.hoffmann@siemens.de  | DevOps Engineer   | open
+[006] Felix Richter    | felix.richter@siemens.de  | Product Manager   | open
+[007] Laura Braun      | laura.braun@siemens.de    | Product Manager   | open
+[008] Nico Koch        | nico.koch@siemens.de      | Data Analyst      | open
+
+--- Fehler ---
+✗ Peter Lang  | Fehlende Pflichtfelder: email, position
+✗ Julia None  | Fehlende Pflichtfelder: last_name
 ```
