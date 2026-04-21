@@ -126,10 +126,15 @@ def generate_pipeline_report(applicants):
 
 
 def main():
-    """Orchestriert den kompletten Pipeline-Prozess."""
     print("=== PERSONIO APPLICANT PIPELINE ===")
     print(f"Datum: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"Modus: {'MOCK' if MOCK_MODE else 'LIVE'}\n")
+
+    token = authenticate()
+    raw_applicants = fetch_all_applicants(token)
+    applicants = [parse_applicant(a) for a in raw_applicants]
+    generate_pipeline_report(applicants)
+    create_applicant(token, "Maria", "Testova", "maria@test.de", "Software Engineer")
 
     # TODO:
     # 1. Authentifizieren
