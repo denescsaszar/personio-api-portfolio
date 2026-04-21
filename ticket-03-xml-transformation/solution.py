@@ -51,17 +51,23 @@ def validate_applicant(applicant):
 
 
 def transform_all(xml_string):
-    """
-    Orchestriert den kompletten Transformations-Prozess:
-    1. XML parsen
-    2. Jeden Bewerber mappen
-    3. Jeden Bewerber validieren
-    4. Gibt zwei Listen zurück: erfolgreiche und fehlerhafte
+    applicants = parse_xml(xml_string)
+    successful = []
+    errors = []
 
-    Output: (successful: list, errors: list)
-    """
-    # TODO: Implementiere die Transformation
-    pass
+    for applicant in applicants:
+        mapped = map_fields(applicant)
+        is_valid, missing = validate_applicant(mapped)
+
+        if is_valid:
+            successful.append(mapped)
+        else:
+            errors.append({
+                "data": mapped,
+                "missing_fields": missing
+            })
+
+    return successful, errors
 
 
 def generate_transformation_report(successful, errors):
