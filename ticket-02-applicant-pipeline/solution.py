@@ -99,14 +99,30 @@ def create_applicant(token, first_name, last_name, email, position):
 
 
 def generate_pipeline_report(applicants):
-    """
-    Pipeline Report generieren:
-    - Gesamtzahl, Aufschlüsselung nach Status (open/hired/rejected)
-    - Aufschlüsselung nach Position und Quelle
-    - Conversion Rate (hired / total)
-    """
-    # TODO: Implementiere den Report
-    pass
+    print("=== PERSONIO APPLICANT PIPELINE REPORT ===")
+    print(f"Quelle: Personio API (TechStart GmbH)\n")
+
+    total = len(applicants)
+    status_counts = Counter(a["status"] for a in applicants)
+    open_count = status_counts.get("open", 0)
+    hired_count = status_counts.get("hired", 0)
+    rejected_count = status_counts.get("rejected", 0)
+
+    print(f"Gesamtzahl Bewerber: {total}")
+    print(f"Offen:       {open_count}  ({open_count/total*100:.0f}%)")
+    print(f"Eingestellt: {hired_count}  ({hired_count/total*100:.0f}%)")
+    print(f"Abgelehnt:   {rejected_count}  ({rejected_count/total*100:.0f}%)\n")
+
+    print("--- Pipeline nach Position ---")
+    for position, count in Counter(a["position"] for a in applicants).most_common():
+        print(f"{position}: {count}")
+
+    print("\n--- Pipeline nach Quelle ---")
+    for source, count in Counter(a["source"] for a in applicants).most_common():
+        print(f"{source}: {count}")
+
+    conversion = hired_count / total * 100
+    print(f"\nConversion Rate (hired/total): {conversion:.1f}%")
 
 
 def main():
