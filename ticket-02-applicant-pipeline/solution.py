@@ -78,14 +78,24 @@ def parse_applicant(raw_applicant):
 
 
 def create_applicant(token, first_name, last_name, email, position):
-    """
-    Neuen Bewerber anlegen via POST Request.
-    POST /v1/company/applicants mit JSON Body.
+    if MOCK_MODE:
+        print(f"\n--- Bewerber anlegen (Test) ---")
+        print(f"✓ Neuer Bewerber angelegt: {first_name} {last_name} | {email} | {position}")
+        return {"success": True, "mock": True}
 
-    Im MOCK_MODE: Gibt einen simulierten Response zurück.
-    """
-    # TODO: Implementiere den POST Request
-    pass
+    response = requests.post(
+        f"{BASE_URL}/company/applicants",
+        headers={"Authorization": f"Bearer {token}"},
+        json={
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "position": position,
+        }
+    )
+    response.raise_for_status()
+    return response.json()
+
 
 
 def generate_pipeline_report(applicants):
