@@ -64,17 +64,17 @@ def fetch_all_applicants(token):
 
 
 def parse_applicant(raw_applicant):
-    """
-    Verschachteltes Personio-JSON in flaches Dict umwandeln.
-
-    Input:  raw_applicant["attributes"]["first_name"]["value"]
-    Output: {"first_name": "Maria", "last_name": "Müller", ...}
-
-    Felder: id, first_name, last_name, email, position,
-            status, source, application_date
-    """
-    # TODO: Implementiere das Parsing
-    pass
+    attrs = raw_applicant["attributes"]
+    return {
+        "id": attrs["id"]["value"],
+        "first_name": attrs["first_name"]["value"],
+        "last_name": attrs["last_name"]["value"],
+        "email": attrs["email"]["value"],
+        "position": attrs["position"]["value"],
+        "status": attrs["status"]["value"],
+        "source": attrs["source"]["value"],
+        "application_date": attrs["application_date"]["value"],
+    }
 
 
 def create_applicant(token, first_name, last_name, email, position):
