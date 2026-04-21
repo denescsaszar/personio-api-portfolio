@@ -34,17 +34,12 @@ def parse_xml(xml_string):
 
 
 def map_fields(sap_applicant):
-    """
-    SAP Felder → Personio Felder mappen anhand FIELD_MAPPING.
-
-    Input:  Ein XML Element (ein SAP Bewerber)
-    Output: Dict mit Personio Feldnamen
-
-    Tipp: sap_applicant.find("FirstName").text
-          Achtung: .text kann None sein wenn Feld fehlt!
-    """
-    # TODO: Implementiere das Feldmapping
-    pass
+    result = {}
+    for sap_field, personio_field in FIELD_MAPPING.items():
+        element = sap_applicant.find(sap_field)
+        value = element.text if element is not None else None
+        result[personio_field] = value if value else None
+    return result
 
 
 def validate_applicant(applicant):
